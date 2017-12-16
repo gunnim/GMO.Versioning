@@ -19,7 +19,7 @@ namespace GMO.Versioning.Tests
             var container = UnityConfig.GetConfiguredContainer();
             container.RegisterInstance(Mock.Of<HttpContextBase>());
 
-            var v = Version.Instance;
+            var v = Versioning.Instance;
         }
 
         [TestMethod]
@@ -49,7 +49,7 @@ namespace GMO.Versioning.Tests
             container.RegisterInstance(mockedFS.Object);
             container.RegisterInstance(mockedFSW.Object);
 
-            var result = Version.AddChecksum(filePath);
+            var result = Versioning.AddChecksum(filePath);
 
             Assert.AreEqual(
                 "supyo.txt?v=B6904CA20CF3967B8525DA9D19D7C5F90003524E3082FA0926EF3FE3148CC712",

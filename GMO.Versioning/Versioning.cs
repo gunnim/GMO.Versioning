@@ -9,13 +9,13 @@ namespace GMO.Versioning
     /// Returns relative file path with file checksum as querystring.
     /// Caches the result and sets up a filesystem watcher to watch for changes.
     /// </summary>
-    public class Version
+    public class Versioning
     {
         /// <summary>
-        /// Returns an instance of the <see cref="Version"/>
+        /// Returns an instance of the <see cref="Versioning"/>
         /// </summary>
-        public static Version Instance =>
-            Settings.container.GetInstance<Version>();
+        public static Versioning Instance =>
+            Settings.container.GetInstance<Versioning>();
 
         /// <summary>
         /// Returns relative file path with file checksum as querystring.
@@ -34,7 +34,7 @@ namespace GMO.Versioning
         /// <summary>
         /// ctor
         /// </summary>
-        public Version(
+        public Versioning(
             HttpContextBase httpCtx,
             IFileSystem fileSystem,
             Settings settings,
@@ -47,7 +47,7 @@ namespace GMO.Versioning
             _settings = settings;
             _fswSvc = fswSvc;
 
-            _log = logFac.GetLogger(typeof(Version));
+            _log = logFac.GetLogger(typeof(Versioning));
         }
 
         /// <summary>
