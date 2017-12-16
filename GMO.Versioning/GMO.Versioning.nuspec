@@ -2,7 +2,7 @@
 <package>
 	<metadata>
 		<id>GMO.Versioning</id>
-		<version>0.0.9</version>
+		<version>0.0.10</version>
 		<title>GMO.Versioning</title>
 		<authors>Gunnar Már Óttarsson</authors>
 		<owners>Gunnar Már Óttarsson</owners>
@@ -11,7 +11,7 @@
 		<iconUrl>https://image.ibb.co/ibm0Um/vinyl.png</iconUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<description>Appends SHA sum of file as querystring, caches value and watches file system for changes.</description>
-		<releaseNotes>Common Logging framework.</releaseNotes>
+		<releaseNotes>Switch to TinyIoC from Unity.</releaseNotes>
 		<copyright>
             Code copyright 2017 - Icon made by https://www.flaticon.com/authors/roundicons https://www.flaticon.com/ is licensed by http://creativecommons.org/licenses/by/3.0/
         </copyright>

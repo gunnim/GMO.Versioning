@@ -4,7 +4,6 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Web;
 using System.Web.Caching;
-using Unity;
 
 namespace GMO.Versioning.Tests
 {
@@ -16,8 +15,8 @@ namespace GMO.Versioning.Tests
         [TestMethod]
         public void GetInstance()
         {
-            var container = UnityConfig.GetConfiguredContainer();
-            container.RegisterInstance(Mock.Of<HttpContextBase>());
+            var container = TinyIoCActivator.Start();
+            container.Register(Mock.Of<HttpContextBase>());
 
             var v = Versioning.Instance;
         }
@@ -44,10 +43,10 @@ namespace GMO.Versioning.Tests
             mockedFS.Setup(x => x.File.Exists(It.IsAny<string>())).Returns(true);
             mockedFS.Setup(x => x.File.OpenRead(It.IsAny<string>())).Returns(ms);
 
-            var container = UnityConfig.GetConfiguredContainer();
-            container.RegisterInstance(mockedHttpCtx.Object);
-            container.RegisterInstance(mockedFS.Object);
-            container.RegisterInstance(mockedFSW.Object);
+            var container = TinyIoCActivator.Start();
+            container.Register(mockedHttpCtx.Object);
+            container.Register(mockedFS.Object);
+            container.Register(mockedFSW.Object);
 
             var result = Versioning.AddChecksum(filePath);
 
