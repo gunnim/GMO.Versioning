@@ -9,22 +9,21 @@ namespace GMO.Versioning
     /// Returns relative file path with file checksum as querystring.
     /// Caches the result and sets up a filesystem watcher to watch for changes.
     /// </summary>
-    public class VersioningService
+    public class Version
     {
         /// <summary>
-        /// Returns an instance of the <see cref="VersioningService"/>
+        /// Returns an instance of the <see cref="Version"/>
         /// </summary>
-        public static VersioningService Instance =>
-            Settings.container.GetService(typeof(VersioningService))
-            as VersioningService;
+        public static Version Instance =>
+            Settings.container.GetInstance<Version>();
 
         /// <summary>
         /// Returns relative file path with file checksum as querystring.
         /// Caches the result and sets up a filesystem watcher to watch for changes.
         /// </summary>
-        public static string PathAndChecksum(string filePath)
+        public static string AddChecksum(string filePath)
         {
-            return Instance.PathNChecksum(filePath);
+            return Instance.PathAndChecksum(filePath);
         }
 
         HttpContextBase _httpCtx;
@@ -35,7 +34,7 @@ namespace GMO.Versioning
         /// <summary>
         /// ctor
         /// </summary>
-        public VersioningService(
+        public Version(
             HttpContextBase httpCtx,
             IFileSystem fileSystem,
             Settings settings,
@@ -48,14 +47,14 @@ namespace GMO.Versioning
             _settings = settings;
             _fswSvc = fswSvc;
 
-            _log = logFac.GetLogger(typeof(VersioningService));
+            _log = logFac.GetLogger(typeof(Version));
         }
 
         /// <summary>
         /// Returns relative file path with file checksum as querystring.
         /// Caches the result and sets up a filesystem watcher to watch for changes.
         /// </summary>
-        string PathNChecksum(string filePath)
+        string PathAndChecksum(string filePath)
         {
             return $"{filePath}?v={AppendFileChecksum(filePath)}";
         }

@@ -19,7 +19,7 @@ namespace GMO.Versioning.Tests
             var container = UnityConfig.GetConfiguredContainer();
             container.RegisterInstance(Mock.Of<HttpContextBase>());
 
-            var v = VersioningService.Instance;
+            var v = Version.Instance;
         }
 
         [TestMethod]
@@ -49,12 +49,12 @@ namespace GMO.Versioning.Tests
             container.RegisterInstance(mockedFS.Object);
             container.RegisterInstance(mockedFSW.Object);
 
-            var v = VersioningService.Instance;
+            var v = Version.Instance;
 
             var result = new PrivateObject(
                 v,
                 new PrivateType(
-                    typeof(VersioningService)
+                    typeof(Version)
                 )
             ).Invoke(
                 "PathNChecksum",
