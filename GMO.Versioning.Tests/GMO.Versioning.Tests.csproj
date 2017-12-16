@@ -77,7 +77,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Versioning\GMO.Versioning.csproj">
+    <ProjectReference Include="..\GMO.Versioning\GMO.Versioning.csproj">
       <Project>{c1a1527e-17a6-42d1-9af4-70959d54ab5c}</Project>
       <Name>GMO.Versioning</Name>
     </ProjectReference>
