@@ -1,4 +1,4 @@
-﻿using log4net;
+﻿using Common.Logging;
 using System.IO;
 using System.IO.Abstractions;
 using System.Web;
@@ -17,12 +17,17 @@ namespace GMO.Versioning
         /// <summary>
         /// ctor
         /// </summary>
-        public FileWatcherService(HttpContextBase httpCtx, IFileSystem fileSystem, Settings settings, ILogFactory logFac)
+        public FileWatcherService(
+            HttpContextBase httpCtx, 
+            IFileSystem fileSystem, 
+            Settings settings,
+            ILogManager logMgr
+        )
         {
             _httpCtx = httpCtx;
             _fs = fileSystem;
             _settings = settings;
-            _log = logFac.GetLogger(typeof(FileWatcherService));
+            _log = logMgr.GetLogger<FileWatcherService>();
         }
 
         /// <summary>

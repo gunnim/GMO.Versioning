@@ -1,4 +1,4 @@
-﻿using log4net;
+﻿using Common.Logging;
 using System.IO;
 using System.IO.Abstractions;
 using System.Web;
@@ -38,7 +38,7 @@ namespace GMO.Versioning
             HttpContextBase httpCtx,
             IFileSystem fileSystem,
             Settings settings,
-            ILogFactory logFac,
+            ILogManager logMgr,
             IFileWatcherService fswSvc
         )
         {
@@ -47,7 +47,7 @@ namespace GMO.Versioning
             _settings = settings;
             _fswSvc = fswSvc;
 
-            _log = logFac.GetLogger(typeof(Versioning));
+            _log = logMgr.GetLogger<Versioning>();
         }
 
         /// <summary>

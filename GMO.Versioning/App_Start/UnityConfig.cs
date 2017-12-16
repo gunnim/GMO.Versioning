@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common.Logging;
+using System;
 using System.IO.Abstractions;
 using System.Web;
 using Unity;
@@ -38,7 +39,7 @@ namespace GMO.Versioning
         public static void RegisterTypes(IUnityContainer container)
         {
             container.RegisterType<HttpContextBase>(new InjectionFactory(c => new HttpContextWrapper(HttpContext.Current)));
-            container.RegisterType<ILogFactory, LogFactory>(new ContainerControlledLifetimeManager());
+            container.RegisterType<ILogManager, LogManager>(new ContainerControlledLifetimeManager());
             container.RegisterType<IFileSystem, FileSystem>();
             container.RegisterType<Settings>(new ContainerControlledLifetimeManager());
             container.RegisterType<IFileWatcherService, FileWatcherService>();
