@@ -49,17 +49,7 @@ namespace GMO.Versioning.Tests
             container.RegisterInstance(mockedFS.Object);
             container.RegisterInstance(mockedFSW.Object);
 
-            var v = Version.Instance;
-
-            var result = new PrivateObject(
-                v,
-                new PrivateType(
-                    typeof(Version)
-                )
-            ).Invoke(
-                "PathNChecksum",
-                new object[] { filePath }
-            );
+            var result = Version.AddChecksum(filePath);
 
             Assert.AreEqual(
                 "supyo.txt?v=B6904CA20CF3967B8525DA9D19D7C5F90003524E3082FA0926EF3FE3148CC712",
