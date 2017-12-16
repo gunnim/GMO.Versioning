@@ -3,14 +3,25 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Web;
 
-namespace Versioning
+namespace GMO.Versioning
 {
-    public class Versioning
+    /// <summary>
+    /// Returns relative file path with file checksum as querystring.
+    /// Caches the result and sets up a filesystem watcher to watch for changes.
+    /// </summary>
+    public class VersioningService
     {
-        public static Versioning Instance =>
-            Settings.container.GetService(typeof(Versioning))
-            as Versioning;
+        /// <summary>
+        /// Returns an instance of the <see cref="VersioningService"/>
+        /// </summary>
+        public static VersioningService Instance =>
+            Settings.container.GetService(typeof(VersioningService))
+            as VersioningService;
 
+        /// <summary>
+        /// Returns relative file path with file checksum as querystring.
+        /// Caches the result and sets up a filesystem watcher to watch for changes.
+        /// </summary>
         public static string PathAndChecksum(string filePath)
         {
             return Instance.PathNChecksum(filePath);
@@ -21,7 +32,10 @@ namespace Versioning
         Settings _settings;
         ILog _log;
         IFileWatcherService _fswSvc;
-        public Versioning(
+        /// <summary>
+        /// ctor
+        /// </summary>
+        public VersioningService(
             HttpContextBase httpCtx,
             IFileSystem fileSystem,
             Settings settings,
@@ -34,9 +48,13 @@ namespace Versioning
             _settings = settings;
             _fswSvc = fswSvc;
 
-            _log = logFac.GetLogger(typeof(Versioning));
+            _log = logFac.GetLogger(typeof(VersioningService));
         }
 
+        /// <summary>
+        /// Returns relative file path with file checksum as querystring.
+        /// Caches the result and sets up a filesystem watcher to watch for changes.
+        /// </summary>
         string PathNChecksum(string filePath)
         {
             return $"{filePath}?v={AppendFileChecksum(filePath)}";
@@ -78,7 +96,9 @@ namespace Versioning
             }
         }
 
-
+        /// <summary>
+        /// Recalculate checksum on file change
+        /// </summary>
         private void OnFileCreatedOrChanged(object source, FileSystemEventArgs e)
         {
             if (_settings.DetailedLogging)

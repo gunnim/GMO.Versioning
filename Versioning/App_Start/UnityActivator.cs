@@ -1,7 +1,7 @@
-﻿[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(Versioning.UnityActivator), "Start")]
-[assembly: WebActivatorEx.ApplicationShutdownMethod(typeof(Versioning.UnityActivator), "Shutdown")]
+﻿[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(GMO.Versioning.UnityActivator), "Start")]
+[assembly: WebActivatorEx.ApplicationShutdownMethod(typeof(GMO.Versioning.UnityActivator), "Shutdown")]
 
-namespace Versioning
+namespace GMO.Versioning
 {
     /// <summary>Provides the bootstrapping for integrating Unity with WebApi when it is hosted in ASP.NET</summary> 
     static class UnityActivator

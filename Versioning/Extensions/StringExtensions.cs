@@ -1,4 +1,4 @@
-﻿namespace Versioning
+﻿namespace GMO.Versioning
 {
     static class StringExtension
     {

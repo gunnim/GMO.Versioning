@@ -6,7 +6,7 @@ using Unity.Injection;
 using Unity.Lifetime;
 using Unity.ServiceLocation;
 
-namespace Versioning
+namespace GMO.Versioning
 {
     /// <summary> 
     /// Specifies the Unity configuration for the main container. 

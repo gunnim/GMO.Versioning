@@ -1,8 +1,11 @@
 ﻿using CommonServiceLocator;
 using System.Configuration;
 
-namespace Versioning
+namespace GMO.Versioning
 {
+    /// <summary>
+    /// Versioning specific settings
+    /// </summary>
     public class Settings
     {
         /// <summary>
@@ -10,6 +13,10 @@ namespace Versioning
         /// </summary>
         internal static IServiceLocator container;
 
+        /// <summary>
+        /// Enable detailed logging for Versioning.
+        /// Control in appSettings with GMO.Versioning.DetailedLogging
+        /// </summary>
         public virtual bool DetailedLogging { get; } = ConfigurationManager.AppSettings["GMO.Versioning.DetailedLogging"].ConvertToBool();
     }
 }

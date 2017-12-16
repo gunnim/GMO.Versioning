@@ -3,14 +3,20 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Web;
 
-namespace Versioning
+namespace GMO.Versioning
 {
+    /// <summary>
+    /// Recalculate checksum on file change
+    /// </summary>
     class FileWatcherService : IFileWatcherService
     {
         Settings _settings;
         ILog _log;
         HttpContextBase _httpCtx;
         IFileSystem _fs;
+        /// <summary>
+        /// ctor
+        /// </summary>
         public FileWatcherService(HttpContextBase httpCtx, IFileSystem fileSystem, Settings settings, ILogFactory logFac)
         {
             _httpCtx = httpCtx;
@@ -20,10 +26,8 @@ namespace Versioning
         }
 
         /// <summary>
-        /// Recalculate checksum on file change
+        /// Creates a file system watcher for the given file path
         /// </summary>
-        /// <param name="fullFilePath"></param>
-        /// <returns></returns>
         public FileSystemWatcherBase CreateFileSystemWatcher(string fullFilePath)
         {
             if (_settings.DetailedLogging)

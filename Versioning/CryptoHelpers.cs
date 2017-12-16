@@ -2,7 +2,7 @@
 using System.IO;
 using System.Security.Cryptography;
 
-namespace Versioning
+namespace GMO.Versioning
 {
     /// <summary> 
     /// Perform crypto calculations 
