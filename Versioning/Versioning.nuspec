@@ -1,0 +1,18 @@
+﻿<?xml version="1.0"?>
+<package>
+	<metadata>
+		<id>Versioning</id>
+		<version>0.0.1</version>
+		<title>Versioning</title>
+		<authors>Gunnar Már Óttarsson</authors>
+		<owners>Gunnar Már Óttarsson</owners>
+		<licenseUrl>https://github.com/gunnim</licenseUrl>
+		<projectUrl>https://github.com/gunnim/VersionService</projectUrl>
+		<iconUrl>https://a-v2.sndcdn.com/assets/images/sc-icons/favicon-2cadd14b.ico</iconUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>Appends SHA sum of file as querystring, caches value and watches file system for changes.</description>
+		<releaseNotes>Initial Release.</releaseNotes>
+		<copyright>Copyright 2017</copyright>
+		<tags></tags>
+	</metadata>
+</package>
