@@ -13,7 +13,7 @@ namespace GMO.Versioning.Tests
         byte[] someData = new byte[8] { 139, 124, 66, 23, 87, 11, 62, 103 };
 
         [TestMethod]
-        public void GetInstance()
+        public void ResolvesInstance()
         {
             var container = TinyIoCActivator.Start();
             container.Register(Mock.Of<HttpContextBase>());

@@ -1,5 +1,4 @@
-﻿using Common.Logging;
-using System.IO.Abstractions;
+﻿using System.IO.Abstractions;
 using System.Web;
 using TinyIoC;
 
@@ -18,7 +17,6 @@ namespace GMO.Versioning
         {
             container.Register<HttpContextBase>((c, p) => new HttpContextWrapper(HttpContext.Current));
             container.Register<Settings>(new Settings());
-            container.Register<ILogManager, LogManager>(new LogManager());
             container.Register<IFileSystem, FileSystem>();
             container.Register<IFileWatcherService, FileWatcherService>();
         }

@@ -1,4 +1,4 @@
-﻿using Common.Logging;
+﻿using GMO.Versioning.Logging;
 using System.IO;
 using System.IO.Abstractions;
 using System.Web;
@@ -10,8 +10,9 @@ namespace GMO.Versioning
     /// </summary>
     class FileWatcherService : IFileWatcherService
     {
+        private static readonly ILog Logger = LogProvider.For<FileWatcherService>();
+
         Settings _settings;
-        ILog _log;
         HttpContextBase _httpCtx;
         IFileSystem _fs;
         /// <summary>
@@ -20,14 +21,12 @@ namespace GMO.Versioning
         public FileWatcherService(
             HttpContextBase httpCtx, 
             IFileSystem fileSystem, 
-            Settings settings,
-            ILogManager logMgr
+            Settings settings
         )
         {
             _httpCtx = httpCtx;
             _fs = fileSystem;
             _settings = settings;
-            _log = logMgr.GetLogger<FileWatcherService>();
         }
 
         /// <summary>
@@ -35,10 +34,7 @@ namespace GMO.Versioning
         /// </summary>
         public FileSystemWatcherBase CreateFileSystemWatcher(string fullFilePath)
         {
-            if (_settings.DetailedLogging)
-            {
-                _log.Info($"Created new filesystem watcher for {fullFilePath}");
-            }
+            Logger.Info($"Created new filesystem watcher for {fullFilePath}");
 
             var dirName = _fs.Path.GetDirectoryName(fullFilePath);
             var fileName = _fs.Path.GetFileName(fullFilePath);

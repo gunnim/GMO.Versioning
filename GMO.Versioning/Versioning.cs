@@ -1,4 +1,4 @@
-﻿using Common.Logging;
+﻿using GMO.Versioning.Logging;
 using System.IO;
 using System.IO.Abstractions;
 using System.Web;
@@ -11,6 +11,8 @@ namespace GMO.Versioning
     /// </summary>
     public class Versioning
     {
+        private static readonly ILog Logger = LogProvider.For<Versioning>();
+
         /// <summary>
         /// Returns an instance of the <see cref="Versioning"/>
         /// </summary>
@@ -29,7 +31,6 @@ namespace GMO.Versioning
         HttpContextBase _httpCtx;
         IFileSystem _fs;
         Settings _settings;
-        ILog _log;
         IFileWatcherService _fswSvc;
         /// <summary>
         /// ctor
@@ -38,7 +39,6 @@ namespace GMO.Versioning
             HttpContextBase httpCtx,
             IFileSystem fileSystem,
             Settings settings,
-            ILogManager logMgr,
             IFileWatcherService fswSvc
         )
         {
@@ -46,8 +46,6 @@ namespace GMO.Versioning
             _fs = fileSystem;
             _settings = settings;
             _fswSvc = fswSvc;
-
-            _log = logMgr.GetLogger<Versioning>();
         }
 
         /// <summary>
@@ -100,10 +98,7 @@ namespace GMO.Versioning
         /// </summary>
         private void OnFileCreatedOrChanged(object source, FileSystemEventArgs e)
         {
-            if (_settings.DetailedLogging)
-            {
-                _log.Info($"Change detected for {e.FullPath} - recalculating hash");
-            }
+            Logger.Info($"Change detected for {e.FullPath} - recalculating hash");
 
             var lastWriteTime = _fs.File.GetLastWriteTime(e.FullPath).ToFileTimeUtc();
 
