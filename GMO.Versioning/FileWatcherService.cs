@@ -1,7 +1,6 @@
 ﻿using GMO.Versioning.Logging;
 using System.IO;
 using System.IO.Abstractions;
-using System.Web;
 
 namespace GMO.Versioning
 {
@@ -13,18 +12,15 @@ namespace GMO.Versioning
         private static readonly ILog Logger = LogProvider.For<FileWatcherService>();
 
         Settings _settings;
-        HttpContextBase _httpCtx;
         IFileSystem _fs;
         /// <summary>
         /// ctor
         /// </summary>
         public FileWatcherService(
-            HttpContextBase httpCtx, 
-            IFileSystem fileSystem, 
+            IFileSystem fileSystem,
             Settings settings
         )
         {
-            _httpCtx = httpCtx;
             _fs = fileSystem;
             _settings = settings;
         }
