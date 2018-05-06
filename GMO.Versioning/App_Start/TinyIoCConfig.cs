@@ -19,6 +19,7 @@ namespace GMO.Versioning
             container.Register<Settings>(new Settings());
             container.Register<IFileSystem, FileSystem>();
             container.Register<IFileWatcherService, FileWatcherService>();
+            container.Register<IMemoryCacheService, MemoryCacheService>();
         }
     }
 }

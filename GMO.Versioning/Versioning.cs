@@ -32,6 +32,7 @@ namespace GMO.Versioning
         IFileSystem _fs;
         Settings _settings;
         IFileWatcherService _fswSvc;
+        IMemoryCacheService _memoryCacheService;
         /// <summary>
         /// ctor
         /// </summary>
@@ -39,40 +40,44 @@ namespace GMO.Versioning
             HttpContextBase httpCtx,
             IFileSystem fileSystem,
             Settings settings,
-            IFileWatcherService fswSvc
+            IFileWatcherService fswSvc,
+            IMemoryCacheService memoryCacheService
         )
         {
             _httpCtx = httpCtx;
             _fs = fileSystem;
             _settings = settings;
             _fswSvc = fswSvc;
+            _memoryCacheService = memoryCacheService;
         }
 
         /// <summary>
         /// Returns relative file path with file checksum as querystring.
         /// Caches the result and sets up a filesystem watcher to watch for changes.
         /// </summary>
-        string PathAndChecksum(string filePath)
+        private string PathAndChecksum(string filePath)
         {
+            Logger.Debug($"Calculating PathAndChecksum for {filePath}");
+
             return $"{filePath}?v={AppendFileChecksum(filePath)}";
         }
 
-        string AppendFileChecksum(string filePath)
+        private string AppendFileChecksum(string filePath)
         {
             var fullFilePath = _httpCtx.Server.MapPath(filePath);
 
-            if (_httpCtx.Cache[fullFilePath + "-fsw"] == null)
+            if (_memoryCacheService.Get<FileSystemWatcherBase>(fullFilePath + "-fsw") == null)
             {
                 // Ensure a file system watcher exists
                 var fsw = _fswSvc.CreateFileSystemWatcher(fullFilePath);
-                fsw.Created += new FileSystemEventHandler(OnFileCreatedOrChanged);
+                fsw.NotifyFilter = NotifyFilters.LastWrite;
                 fsw.Changed += new FileSystemEventHandler(OnFileCreatedOrChanged);
-                _httpCtx.Cache.Insert(fullFilePath + "-fsw", fsw);
+                _memoryCacheService.Default[fullFilePath + "-fsw"] = fsw;
             }
 
             // Get or update
-            return (string)(_httpCtx.Cache[fullFilePath]
-                ?? (_httpCtx.Cache[fullFilePath] = CalculateFileHash(fullFilePath)));
+            return (string)(_memoryCacheService.Default[fullFilePath]
+                ?? (_memoryCacheService.Default[fullFilePath] = CalculateFileHash(fullFilePath)));
         }
 
         /// <summary>
@@ -98,18 +103,32 @@ namespace GMO.Versioning
         /// </summary>
         private void OnFileCreatedOrChanged(object source, FileSystemEventArgs e)
         {
+            if (!FileIsReady(e.FullPath)) return; //first notification the file is arriving
+
             Logger.Info($"Change detected for {e.FullPath} - recalculating hash");
+            _memoryCacheService.Default[e.FullPath] = CalculateFileHash(e.FullPath);
+        }
 
-            var lastWriteTime = _fs.File.GetLastWriteTime(e.FullPath).ToFileTimeUtc();
-
-            // During file modification multiple change events can fire.
-            // We use the last write time of file to squash duplicate events
-            var prevWriteTime = _httpCtx.Cache[e.FullPath + "-lastWriteTime"];
-
-            if (prevWriteTime == null || (prevWriteTime != null && lastWriteTime != (long)prevWriteTime))
+        /// <summary>
+        /// https://www.intertech.com/Blog/avoiding-file-concurrency-using-system-io-filesystemwatcher/
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        private bool FileIsReady(string path)
+        {
+            // One exception per file rather than several like in the polling pattern
+            try
             {
-                _httpCtx.Cache[e.FullPath + "-lastWriteTime"] = lastWriteTime;
-                _httpCtx.Cache[e.FullPath] = CalculateFileHash(e.FullPath);
+                //If we can't open the file, it's still copying
+                using (var file = File.OpenRead(path))
+                {
+                    return true;
+                }
+            }
+            catch (IOException)
+            {
+                Logger.Debug($"IOException on OpenRead for path {path}, file not ready.");
+                return false;
             }
         }
     }

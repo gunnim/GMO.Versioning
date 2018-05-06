@@ -30,11 +30,9 @@ namespace GMO.Versioning.Tests
             var mockedServerUtility = new Mock<HttpServerUtilityBase>();
             mockedServerUtility.Setup(x => x.MapPath(It.IsAny<string>())).Returns(filePath);
 
-            var httpCache = new Cache();
             var mockedHttpCtx = new Mock<HttpContextBase>();
 
             mockedHttpCtx.SetupGet(x => x.Server).Returns(mockedServerUtility.Object);
-            mockedHttpCtx.SetupGet(x => x.Cache).Returns(httpCache);
 
             var mockedFSW = new Mock<IFileWatcherService>();
             mockedFSW.Setup(x => x.CreateFileSystemWatcher(It.IsAny<string>()))
