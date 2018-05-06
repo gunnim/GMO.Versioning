@@ -15,8 +15,8 @@ namespace GMO.Versioning.Tests
         [TestMethod]
         public void ResolvesInstance()
         {
-            var container = TinyIoCActivator.Start();
-            container.Register(Mock.Of<HttpContextBase>());
+            var container = LightInjectActivator.Start();
+            container.RegisterInstance(Mock.Of<HttpContextBase>());
 
             var v = Versioning.Instance;
         }
@@ -41,10 +41,10 @@ namespace GMO.Versioning.Tests
             mockedFS.Setup(x => x.File.Exists(It.IsAny<string>())).Returns(true);
             mockedFS.Setup(x => x.File.OpenRead(It.IsAny<string>())).Returns(ms);
 
-            var container = TinyIoCActivator.Start();
-            container.Register(mockedHttpCtx.Object);
-            container.Register(mockedFS.Object);
-            container.Register(mockedFSW.Object);
+            var container = LightInjectActivator.Start();
+            container.RegisterInstance(mockedHttpCtx.Object);
+            container.RegisterInstance(mockedFS.Object);
+            container.RegisterInstance(mockedFSW.Object);
 
             var result = Versioning.AddChecksum(filePath);
 

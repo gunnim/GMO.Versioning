@@ -8,6 +8,9 @@ namespace GMO.Versioning
         public T Get<T>(string key) => (T)Default.Get(key);
     }
 
+    /// <summary>
+    /// System.Runtime.Caching abstraction wrapper
+    /// </summary>
     public interface IMemoryCacheService
     {
         MemoryCache Default { get; }
