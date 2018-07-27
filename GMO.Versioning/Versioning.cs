@@ -28,11 +28,11 @@ namespace GMO.Versioning
             return Instance.PathAndChecksum(filePath);
         }
 
-        HttpContextBase _httpCtx;
-        IFileSystem _fs;
-        Settings _settings;
-        IFileWatcherService _fswSvc;
-        IMemoryCacheService _memoryCacheService;
+        readonly HttpContextBase _httpCtx;
+        readonly IFileSystem _fs;
+        readonly Settings _settings;
+        readonly IFileWatcherService _fswSvc;
+        readonly IMemoryCacheService _memoryCacheService;
         /// <summary>
         /// ctor
         /// </summary>

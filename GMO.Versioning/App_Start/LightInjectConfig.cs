@@ -13,7 +13,7 @@ namespace GMO.Versioning
         /// <param name="container">The container to configure.</param> 
         public static void RegisterTypes(LightInject.ServiceContainer container)
         {
-            container.Register<HttpContextBase>(c => new HttpContextWrapper(HttpContext.Current), new PerRequestLifeTime());
+            container.Register<HttpContextBase>(c => new HttpContextWrapper(HttpContext.Current));
             container.Register<Versioning>(new PerRequestLifeTime());
 
             container.Register<Settings>(new PerContainerLifetime());

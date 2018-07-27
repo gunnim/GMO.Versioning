@@ -64,7 +64,6 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="FileWatcherService.cs" />
     <Compile Include="IFileWatcherService.cs" />
-    <Compile Include="LightInject.Web\LightInject.Web.cs" />
     <Compile Include="LightInject\LightInject.cs" />
     <Compile Include="LightInject\ServiceLocation\LightInject.ServiceLocation.cs" />
     <Compile Include="MemoryCacheService.cs" />
