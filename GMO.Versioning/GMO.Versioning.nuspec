@@ -6,7 +6,7 @@
 		<title>GMO.Versioning</title>
 		<authors>Gunnar Már Óttarsson</authors>
 		<owners>Gunnar Már Óttarsson</owners>
-		<licenseUrl>https://github.com/gunnim</licenseUrl>
+		<license type="expression">MIT</license>
 		<projectUrl>https://github.com/gunnim/GMO.Versioning</projectUrl>
 		<iconUrl>https://image.ibb.co/ibm0Um/vinyl.png</iconUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
