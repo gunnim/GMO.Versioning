@@ -1,6 +1,4 @@
-﻿using GMO.Versioning.LightInject.ServiceLocation;
-
-[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(GMO.Versioning.LightInjectActivator), "Start")]
+﻿[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(GMO.Versioning.LightInjectActivator), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethod(typeof(GMO.Versioning.LightInjectActivator), "Shutdown")]
 
 namespace GMO.Versioning
@@ -14,7 +12,7 @@ namespace GMO.Versioning
             // Register Types 
             var container = new LightInject.ServiceContainer();
             LightInjectConfig.RegisterTypes(container);
-            Settings.container = new LightInjectServiceLocator(container);
+            Settings.container = container;
 
             return container;
         }
@@ -22,8 +20,7 @@ namespace GMO.Versioning
         /// <summary>Disposes the Unity container when the application is shut down.</summary> 
         public static void Shutdown()
         {
-            var container = new LightInject.ServiceContainer();
-            container.Dispose();
+            Settings.container?.Dispose();
         }
     }
 }

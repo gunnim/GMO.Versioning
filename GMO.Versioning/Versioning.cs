@@ -17,7 +17,7 @@ namespace GMO.Versioning
         /// Returns an instance of the <see cref="Versioning"/>
         /// </summary>
         public static Versioning Instance =>
-            Settings.container.GetInstance<Versioning>();
+            (Versioning) Settings.container.GetInstance(typeof(Versioning));
 
         /// <summary>
         /// Returns relative file path with file checksum as querystring.
@@ -30,7 +30,6 @@ namespace GMO.Versioning
 
         readonly HttpContextBase _httpCtx;
         readonly IFileSystem _fs;
-        readonly Settings _settings;
         readonly IFileWatcherService _fswSvc;
         readonly IMemoryCacheService _memoryCacheService;
         /// <summary>
@@ -39,14 +38,12 @@ namespace GMO.Versioning
         public Versioning(
             HttpContextBase httpCtx,
             IFileSystem fileSystem,
-            Settings settings,
             IFileWatcherService fswSvc,
             IMemoryCacheService memoryCacheService
         )
         {
             _httpCtx = httpCtx;
             _fs = fileSystem;
-            _settings = settings;
             _fswSvc = fswSvc;
             _memoryCacheService = memoryCacheService;
         }
