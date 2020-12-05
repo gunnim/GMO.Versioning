@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GMO.Versioning", "GMO.Versioning\GMO.Versioning.csproj", "{C1A1527E-17A6-42D1-9AF4-70959D54AB5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GMO.Versioning", "GMO.Versioning\GMO.Versioning.csproj", "{C1A1527E-17A6-42D1-9AF4-70959D54AB5C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GMO.Versioning.Tests", "GMO.Versioning.Tests\GMO.Versioning.Tests.csproj", "{9CA5695C-C7E8-4659-8FB8-9A8899A0FDD0}"
 EndProject
@@ -11,10 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
-		appveyor.yml = appveyor.yml
 		NuGet.config = NuGet.config
 		README.md = README.md
-		release-build-push.ps1 = release-build-push.ps1
 	EndProjectSection
 EndProject
 Global
