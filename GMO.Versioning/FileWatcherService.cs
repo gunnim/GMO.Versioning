@@ -1,4 +1,5 @@
 ﻿using GMO.Versioning.Logging;
+using Microsoft.Extensions.Logging;
 using System.IO;
 using System.IO.Abstractions;
 
@@ -9,20 +10,17 @@ namespace GMO.Versioning
     /// </summary>
     class FileWatcherService : IFileWatcherService
     {
-        private static readonly ILog Logger = LogProvider.For<FileWatcherService>();
-
-        Settings _settings;
-        IFileSystem _fs;
+        readonly ILogger _logger;
+        readonly IFileSystem _fs;
         /// <summary>
         /// ctor
         /// </summary>
         public FileWatcherService(
             IFileSystem fileSystem,
-            Settings settings
-        )
+            ILogger logger)
         {
             _fs = fileSystem;
-            _settings = settings;
+            _logger = logger;
         }
 
         /// <summary>
@@ -30,7 +28,7 @@ namespace GMO.Versioning
         /// </summary>
         public FileSystemWatcherBase CreateFileSystemWatcher(string fullFilePath)
         {
-            Logger.Info($"Created new filesystem watcher for {fullFilePath}");
+            _logger.LogInformation($"Created new filesystem watcher for {fullFilePath}");
 
             var dirName = _fs.Path.GetDirectoryName(fullFilePath);
             var fileName = _fs.Path.GetFileName(fullFilePath);

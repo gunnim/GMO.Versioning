@@ -1,18 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
-
+        <TargetFramework>net452</TargetFramework>
+        <AssemblyName>GMO.Versioning</AssemblyName>
+        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        
         <!-- Package properties -->
         <PackageId>GMO.Versioning</PackageId>
-        <Version>2.0.0</Version>
+        <Version>1.0.5</Version>
         <Title>GMO.Versioning</Title>
         <Authors>Gunnar Már Óttarsson</Authors>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageProjectUrl>https://github.com/gunnim/GMO.Versioning</PackageProjectUrl>
         <PackageIcon>images\vinyl.png</PackageIcon>
         <Description>Appends SHA sum of file as querystring, caches value and watches file system for changes.</Description>
-        <PackageReleaseNotes>net5.0</PackageReleaseNotes>
+        <PackageReleaseNotes>Update System.IO.Abstractions and migrate to SDK style csproj.</PackageReleaseNotes>
         <Copyright>Code copyright 2020 - Icon made by https://www.flaticon.com/authors/roundicons https://www.flaticon.com/ is licensed by http://creativecommons.org/licenses/by/3.0/</Copyright>
         <PackageTags></PackageTags>
 
@@ -29,18 +31,22 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <DefineConstants>DEBUG;TRACE</DefineConstants>
-        <DocumentationFile>bin\Debug\GMO.Versioning.xml</DocumentationFile>
+      <DefineConstants>DEBUG;TRACE</DefineConstants>
+      <DocumentationFile>bin\Debug\GMO.Versioning.xml</DocumentationFile>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-        <DefineConstants>TRACE</DefineConstants>
-        <DocumentationFile>bin\Release\GMO.Versioning.xml</DocumentationFile>
+      <DefineConstants>TRACE</DefineConstants>
+      <DocumentationFile>bin\Release\GMO.Versioning.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
-        <!-- Package icon -->
-        <None Include="..\vinyl.png" Pack="true" PackagePath="images\" />
+      <None Remove="Views\web.config.transform" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <!-- Package icon -->
+      <None Include="..\vinyl.png" Pack="true" PackagePath="images\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -50,24 +56,29 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="Views\web.config.transform" />
+      <Content Include="Views\web.config.transform" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-        <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        <PackageReference Include="LibLog" Version="4.2.6">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="5.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.1">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="16.10.56">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
         <PackageReference Include="System.IO.Abstractions" Version="7.1.10" />
+        <PackageReference Include="WebActivatorEx" Version="2.2.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="System.Runtime.Caching" />
+      <Reference Include="System.Web" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Properties\" />
+    </ItemGroup>
 </Project>

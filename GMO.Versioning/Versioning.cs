@@ -1,7 +1,9 @@
-﻿using GMO.Versioning.Logging;
+﻿using Microsoft.Extensions.Logging;
 using System.IO;
 using System.IO.Abstractions;
-using System.Web;
+using Microsoft.AspNetCore.Hosting;
+using System;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace GMO.Versioning
 {
@@ -11,70 +13,61 @@ namespace GMO.Versioning
     /// </summary>
     public class Versioning
     {
-        private static readonly ILog Logger = LogProvider.For<Versioning>();
-
-        /// <summary>
-        /// Returns an instance of the <see cref="Versioning"/>
-        /// </summary>
-        public static Versioning Instance =>
-            (Versioning) Settings.container.GetInstance(typeof(Versioning));
-
-        /// <summary>
-        /// Returns relative file path with file checksum as querystring.
-        /// Caches the result and sets up a filesystem watcher to watch for changes.
-        /// </summary>
-        public static string AddChecksum(string filePath)
-        {
-            return Instance.PathAndChecksum(filePath);
-        }
-
-        readonly HttpContextBase _httpCtx;
+        readonly IHostingEnvironment _env;
+        readonly ILogger _logger;
         readonly IFileSystem _fs;
         readonly IFileWatcherService _fswSvc;
-        readonly IMemoryCacheService _memoryCacheService;
+        readonly IMemoryCache _memoryCache;
         /// <summary>
         /// ctor
         /// </summary>
         public Versioning(
-            HttpContextBase httpCtx,
             IFileSystem fileSystem,
             IFileWatcherService fswSvc,
-            IMemoryCacheService memoryCacheService
-        )
+            IMemoryCache memoryCache,
+            IHostingEnvironment env,
+            ILogger logger)
         {
-            _httpCtx = httpCtx;
             _fs = fileSystem;
             _fswSvc = fswSvc;
-            _memoryCacheService = memoryCacheService;
+            _memoryCache = memoryCache;
+            _env = env;
+            _logger = logger;
         }
 
         /// <summary>
         /// Returns relative file path with file checksum as querystring.
         /// Caches the result and sets up a filesystem watcher to watch for changes.
         /// </summary>
-        private string PathAndChecksum(string filePath)
+        public virtual string PathAndChecksum(string filePath)
         {
-            Logger.Debug($"Calculating PathAndChecksum for {filePath}");
+            if (string.IsNullOrEmpty(filePath))
+            {
+                throw new ArgumentException("string.IsNullOrEmpty(filePath)", nameof(filePath));
+            }
+
+            _logger.LogDebug($"Calculating PathAndChecksum for {filePath}");
 
             return $"{filePath}?v={AppendFileChecksum(filePath)}";
         }
 
         private string AppendFileChecksum(string filePath)
         {
-            var fullFilePath = _httpCtx.Server.MapPath(filePath);
+            var fullFilePath = _env.WebRootPath + filePath;
 
-            if (_memoryCacheService.Get<FileSystemWatcherBase>(fullFilePath + "-fsw") == null)
+            if (_memoryCache.Get<FileSystemWatcherBase>(fullFilePath + "-fsw") == null)
             {
                 // Ensure a file system watcher exists
                 var fsw = _fswSvc.CreateFileSystemWatcher(fullFilePath);
                 fsw.NotifyFilter = NotifyFilters.LastWrite;
                 fsw.Changed += new FileSystemEventHandler(OnFileCreatedOrChanged);
-                _memoryCacheService.Default[fullFilePath + "-fsw"] = fsw;
+                _memoryCache.Set(fullFilePath + "-fsw", fsw);
             }
 
             // Get or update
-            return (string)(_memoryCacheService.Default[fullFilePath]
-                ?? (_memoryCacheService.Default[fullFilePath] = CalculateFileHash(fullFilePath)));
+            return _memoryCache.GetOrCreate(
+                fullFilePath,
+                (entry) => CalculateFileHash(fullFilePath));
         }
 
         /// <summary>
@@ -82,17 +75,15 @@ namespace GMO.Versioning
         /// </summary>
         /// <param name="fullFilePath"></param>
         /// <returns></returns>
-        private string CalculateFileHash(string fullFilePath)
+        protected virtual string CalculateFileHash(string fullFilePath)
         {
             if (!_fs.File.Exists(fullFilePath))
             {
                 throw new FileNotFoundException("File not found", fullFilePath);
             }
 
-            using (var fileStream = _fs.File.OpenRead(fullFilePath))
-            {
-                return CryptoHelpers.GetSHASum(fileStream);
-            }
+            using var fileStream = _fs.File.OpenRead(fullFilePath);
+            return CryptoHelpers.GetSHASum(fileStream);
         }
 
         /// <summary>
@@ -102,8 +93,8 @@ namespace GMO.Versioning
         {
             if (!FileIsReady(e.FullPath)) return; //first notification the file is arriving
 
-            Logger.Info($"Change detected for {e.FullPath} - recalculating hash");
-            _memoryCacheService.Default[e.FullPath] = CalculateFileHash(e.FullPath);
+            _logger.LogInformation($"Change detected for {e.FullPath} - recalculating hash");
+            _memoryCache.Set(e.FullPath, CalculateFileHash(e.FullPath));
         }
 
         /// <summary>
@@ -117,14 +108,12 @@ namespace GMO.Versioning
             try
             {
                 //If we can't open the file, it's still copying
-                using (var file = File.OpenRead(path))
-                {
-                    return true;
-                }
+                using var file = File.OpenRead(path);
+                return true;
             }
             catch (IOException)
             {
-                Logger.Debug($"IOException on OpenRead for path {path}, file not ready.");
+                _logger.LogDebug($"IOException on OpenRead for path {path}, file not ready.");
                 return false;
             }
         }
